@@ -1,0 +1,7 @@
+prune */__pycache__
+include requirements*.txt
+include *.md
+global-exclude **/*.cpp
+global-include **/*.py
+global-include **/*.json
+global-include **/*.patch
