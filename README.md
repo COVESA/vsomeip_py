@@ -1,7 +1,7 @@
 SOMEIP Adpater
 ===========
 ## Overview
-Python module to leverage someip implementations developed from other programming languages.
+Python module to leverage [COVESA / vsomeip](https://github.com/COVESA/vsomeip) stack.
 
 ## Setup
 ### Prerequisites
