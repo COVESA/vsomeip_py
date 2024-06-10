@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
 import unittest
 from typing import Tuple, List
 import tracemalloc
-from vsomeip_adapter.vsomeip import vSOMEIP
+from vsomeip_py.vsomeip import vSOMEIP
 
 
 class SOMEIP_Test(vSOMEIP):

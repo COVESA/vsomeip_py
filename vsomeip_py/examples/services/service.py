@@ -21,7 +21,8 @@ SPDX-License-Identifier: Apache-2.0
 
 import time
 from typing import Final
-from vsomeip_adapter.vsomeip import vSOMEIP
+from vsomeip_py.vsomeip import vSOMEIP
+
 
 APPLICATION_NAME: Final = 'super_cool_app_service'
 APPLICATION_ID: Final = 0x0001

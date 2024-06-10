@@ -19,4 +19,4 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-from .vsomeip_adapter.vsomeip import vSOMEIP
+from .vsomeip_py.vsomeip import vSOMEIP

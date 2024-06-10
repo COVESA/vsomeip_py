@@ -24,6 +24,8 @@ import threading
 import time
 from typing import Final
 from test_base import *
+from vsomeip_py.vsomeip import vSOMEIP
+
 
 TIMEOUT: Final[float] = 10
 

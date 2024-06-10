@@ -22,7 +22,8 @@ SPDX-License-Identifier: Apache-2.0
 import time
 import uuid
 from threading import Thread
-from vsomeip_adapter.vsomeip import vSOMEIP
+from vsomeip_py.vsomeip import vSOMEIP
+
 
 SERVICE_ID_DEFAULT = 0x1234
 SERVICE_INSTANCE_DEFAULT = 0x5678

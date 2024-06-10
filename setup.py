@@ -23,7 +23,7 @@ from setuptools import Extension, setup, find_packages
 import os, sys
 import pathlib
 
-project_name = 'vsomeip_adapter'
+project_name = 'vsomeip_py'
 
 script_directory = os.path.realpath(os.path.dirname(__file__))
 is_windows = sys.platform.startswith('win')
@@ -49,7 +49,7 @@ setup(
     packages=find_packages(exclude=['**/*.cpp']),
     include_package_data=True,  # see MANIFEST.in
     dependency_links=[],
-    install_requires=['scapy'],
+    install_requires=[],
     cmdclass={},
     license='LICENSE.txt',
     long_description=open(os.path.join(script_directory, 'README.md')).read(),

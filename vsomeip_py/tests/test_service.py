@@ -21,6 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import time
 from test_base import *
+from vsomeip_py.vsomeip import vSOMEIP
 
 
 class ServiceTestCase(BaseTestCase):
