@@ -39,3 +39,6 @@ See 'examples' and 'tests'...
 
 > [!NOTE]
 > [COVESA / vsomeip](https://github.com/COVESA/vsomeip) uses configuration files, however those are automatically created as services and clients are launch within this module.  Be sure no other installation of vsomeip environment variables are set in the system.
+## Contributors
+Anyone is welcome to contribute. Currently, significant contributions are from:
+ - [General Motors (GM)](https://www.gm.com/)
