@@ -1,6 +1,5 @@
 """
-SPDX-FileCopyrightText: Copyright (c) 2023 Contributors to the
-Eclipse Foundation
+SPDX-FileCopyrightText: Copyright (c) 2023 Contributors to COVESA
 
 See the NOTICE file(s) distributed with this work for additional
 information regarding copyright ownership.
