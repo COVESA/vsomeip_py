@@ -23,7 +23,7 @@ from setuptools import Extension, setup, find_packages
 import os, sys
 import pathlib
 
-project_name = 'someip_adapter'
+project_name = 'vsomeip_adapter'
 
 script_directory = os.path.realpath(os.path.dirname(__file__))
 is_windows = sys.platform.startswith('win')

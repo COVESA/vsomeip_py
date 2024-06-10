@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
 import time
 import uuid
 from threading import Thread
-from someip_adapter.vsomeip import SOMEIP
+from vsomeip_adapter.vsomeip import vSOMEIP
 
 SERVICE_ID_DEFAULT = 0x1234
 SERVICE_INSTANCE_DEFAULT = 0x5678
@@ -38,7 +38,7 @@ class service:
         return None # no response
 
     def __init__(self, index: int = 0):
-        configuration = SOMEIP.configuration()
+        configuration = vSOMEIP.configuration()
 
         self.service_name = "service_example" + f"_{index}" + f"_{uuid.uuid4().hex.upper()[0:6]}"
         self.service_id = SERVICE_ID_DEFAULT + index
@@ -51,7 +51,7 @@ class service:
         self.service_events = [0x8700 + index, 0x8800 + index, 0x8900 + index, 0x8600 + index] + [_ for _ in range(0x8000, 0x8100)]
         self.service_method = 0x9002
 
-        self.someip = SOMEIP(self.service_name, self.service_id, self.service_instance, configuration=configuration)
+        self.someip = vSOMEIP(self.service_name, self.service_id, self.service_instance, configuration=configuration)
 
     def activate(self):
         self.someip.create()
@@ -68,7 +68,7 @@ class client:
         return None  # no response
 
     def __init__(self, index: int = 0, increment: int = 0):
-        configuration = SOMEIP.configuration()
+        configuration = vSOMEIP.configuration()
 
         self.client_name = "client_example" + f"_{increment}" + f"_{index}" + f"_{uuid.uuid4().hex.upper()[0:6]}"
         self.service_id = SERVICE_ID_DEFAULT + increment
@@ -80,7 +80,7 @@ class client:
         self.service_method = 0x9002
         self.service_events = [0x8700 + increment, 0x8800 + increment, 0x8900 + increment, 0x8600 + increment] + [_ for _ in range(0x8000, 0x8100)]  # 0x8XXX
 
-        self.someip = SOMEIP(self.client_name, self.service_id, self.service_instance, configuration=configuration)
+        self.someip = vSOMEIP(self.client_name, self.service_id, self.service_instance, configuration=configuration)
 
     def activate(self):
         self.someip.create()
@@ -92,7 +92,7 @@ class client:
 
 
 if __name__ == '__main__':
-    SOMEIP.terminate()
+    vSOMEIP.terminate()
     time.sleep(1)
 
     instances = 3

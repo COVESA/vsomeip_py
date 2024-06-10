@@ -34,7 +34,7 @@ import atexit
 is_windows = sys.platform.startswith('win')
 
 
-class SOMEIP:
+class vSOMEIP:
     """
     Bindings for simple operations for service/client with
     vsomeip (<a href=https://github.com/COVESA/vsomeip>vsomip</a>)
@@ -89,34 +89,34 @@ class SOMEIP:
         self._is_service = None
         self._version = version
 
-        with SOMEIP._lock:  # protect while accessing external features
+        with vSOMEIP._lock:  # protect while accessing external features
             if configuration:
-                SOMEIP._configuration = configuration
+                vSOMEIP._configuration = configuration
             else:
-                SOMEIP._configuration = self._configuration_template()
+                vSOMEIP._configuration = self._configuration_template()
 
             if force or is_windows:
                 # https://github.com/COVESA/vsomeip/issues/289, https://github.com/COVESA/vsomeip/issues/615
                 self._purge("vsomeip*.lck")
 
-            if SOMEIP._configuration["services"]:  # if no services configured no router is needed!
-                if not SOMEIP._routing:
-                    SOMEIP._routing = self._name
-                SOMEIP._configuration['routing'] = SOMEIP._routing
+            if vSOMEIP._configuration["services"]:  # if no services configured no router is needed!
+                if not vSOMEIP._routing:
+                    vSOMEIP._routing = self._name
+                vSOMEIP._configuration['routing'] = vSOMEIP._routing
 
             # note: default configuration file if none given!!!
             with open('vsomeip.json', "w", newline='\n') as file_handle:
-                json.dump(SOMEIP._configuration, file_handle, sort_keys=True, indent=2)
+                json.dump(vSOMEIP._configuration, file_handle, sort_keys=True, indent=2)
                 file_handle.flush()
 
-        atexit.register(SOMEIP.terminate)  # executed at interpreter termination
+        atexit.register(vSOMEIP.terminate)  # executed at interpreter termination
 
     @staticmethod
     def terminate():
         """ reload underlying c-api module(s) """
         # todo:  not there should be proper way to close service hosting routing daemon
-        del SOMEIP.module
-        SOMEIP.module = importlib.import_module('vsomeip_ext')
+        del vSOMEIP.module
+        vSOMEIP.module = importlib.import_module('vsomeip_ext')
         time.sleep(0)  # yield
 
     def __del__(self):
@@ -148,36 +148,36 @@ class SOMEIP:
         reference of configuration used
         :return: configuration
         """
-        if not SOMEIP._configuration:
-            SOMEIP._configuration = SOMEIP._configuration_template()
-        return SOMEIP._configuration
+        if not vSOMEIP._configuration:
+            vSOMEIP._configuration = vSOMEIP._configuration_template()
+        return vSOMEIP._configuration
 
     def create(self):
         """
         create application
         """
-        SOMEIP.module.create(self._name, self._id, self._instance)
+        vSOMEIP.module.create(self._name, self._id, self._instance)
 
     def start(self):
         """
         start application
         """
-        SOMEIP.module.start(self._name, self._id, self._instance)
+        vSOMEIP.module.start(self._name, self._id, self._instance)
 
     def stop(self):
         """
         stop application
         """
         try:
-            SOMEIP.module.stop(self._name, self._id, self._instance)
+            vSOMEIP.module.stop(self._name, self._id, self._instance)
         except SystemError:  # todo: why eating...
             pass
 
-        with SOMEIP._lock:
+        with vSOMEIP._lock:
             if hasattr(self, '_name'):
-                if SOMEIP._routing == self._name:  # if we are the router remove
-                    SOMEIP._routing = None
-                    SOMEIP._configuration = self._configuration_template()  # clear!
+                if vSOMEIP._routing == self._name:  # if we are the router remove
+                    vSOMEIP._routing = None
+                    vSOMEIP._configuration = self._configuration_template()  # clear!
 
     def register(self):
         """
@@ -186,7 +186,7 @@ class SOMEIP:
         """
         if self._is_service:
             raise UserWarning("client registers, service offer")
-        SOMEIP.module.request_service(self._name, self._id, self._instance, self._version[0], self._version[1])
+        vSOMEIP.module.request_service(self._name, self._id, self._instance, self._version[0], self._version[1])
 
     def request(self, id: int, data: bytearray = None, is_tcp: bool = False) -> int:
         """
@@ -202,7 +202,7 @@ class SOMEIP:
 
         if data is None:
             data = bytearray([0x00])  # NULL
-        request_id = SOMEIP.module.send_service(self._name, self._id, self._instance, id, -1 if is_tcp else 0, data)
+        request_id = vSOMEIP.module.send_service(self._name, self._id, self._instance, id, -1 if is_tcp else 0, data)
         return request_id
 
     def callback(self, type: int, service: int, id: int, data: bytearray, request_id: int) -> bytearray:
@@ -229,7 +229,7 @@ class SOMEIP:
         """
         if callback is None:
             callback = self.callback
-        SOMEIP.module.register_message(self._name, self._id, self._instance, id, callback)
+        vSOMEIP.module.register_message(self._name, self._id, self._instance, id, callback)
 
     def on_event(self, id: int, callback: Callable[[int, int, int, bytearray, int], bytearray] = None, group: int = ANY):
         """
@@ -241,7 +241,7 @@ class SOMEIP:
         if callback is None:
             callback = self.callback
 
-        SOMEIP.module.request_event_service(self._name, self._id, self._instance, id, group, self._version[0],
+        vSOMEIP.module.request_event_service(self._name, self._id, self._instance, id, group, self._version[0],
                                           self._version[1])
         self.on_message(id, callback)
 
@@ -251,7 +251,7 @@ class SOMEIP:
         :param id: event id (ex: 0x08??)
         :param group: define group, else default
         """
-        SOMEIP.module.unrequest_event_service(self._name, self._id, self._instance, id, group)
+        vSOMEIP.module.unrequest_event_service(self._name, self._id, self._instance, id, group)
 
     def offer(self, events: List[int] = None, group: int = ANY):
         """
@@ -263,9 +263,9 @@ class SOMEIP:
 
         if events:
             for event in events:
-                SOMEIP.module.offer_event_service(self._name, self._id, self._instance, event, group)
+                vSOMEIP.module.offer_event_service(self._name, self._id, self._instance, event, group)
         else:
-            SOMEIP.module.offer_service(self._name, self._id, self._instance, self._version[0], self._version[1])
+            vSOMEIP.module.offer_service(self._name, self._id, self._instance, self._version[0], self._version[1])
 
     def notify(self, id: int, data: bytearray = None):
         """
@@ -279,4 +279,4 @@ class SOMEIP:
 
         if data is None:
             data = bytearray([0x00])  # NULL, have to send something
-        SOMEIP.module.notify_clients(self._name, self._id, self._instance, id, data)
+        vSOMEIP.module.notify_clients(self._name, self._id, self._instance, id, data)

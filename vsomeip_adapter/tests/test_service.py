@@ -36,7 +36,7 @@ class ServiceTestCase(BaseTestCase):
             self.service.request(self.method_id, data=self.data)
 
     def test_response(self):
-        self.assertEqual(self.service.callback(SOMEIP.Message_Type.REQUEST.value, self.service._id, self.method_id, self.data, 0), self.data)
+        self.assertEqual(self.service.callback(vSOMEIP.Message_Type.REQUEST.value, self.service._id, self.method_id, self.data, 0), self.data)
 
     def test_on_message(self):
         self.service.on_message(self.method_id)

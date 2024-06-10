@@ -1,4 +1,4 @@
-"""
+/*
 SPDX-FileCopyrightText: Copyright (c) 2023 Contributors to COVESA
 
 See the NOTICE file(s) distributed with this work for additional
@@ -17,7 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
-"""
+*/
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>

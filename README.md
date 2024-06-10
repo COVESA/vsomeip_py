@@ -1,4 +1,4 @@
-SOMEIP Adapter
+VSOMEIP Adapter
 ===========
 ## Overview
 Python module to leverage [COVESA / vsomeip](https://github.com/COVESA/vsomeip) stack.

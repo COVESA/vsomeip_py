@@ -22,10 +22,10 @@ SPDX-License-Identifier: Apache-2.0
 import unittest
 from typing import Tuple, List
 import tracemalloc
-from someip_adapter.vsomeip import SOMEIP
+from vsomeip_adapter.vsomeip import vSOMEIP
 
 
-class SOMEIP_Test(SOMEIP):
+class SOMEIP_Test(vSOMEIP):
     def __init__(self, name: str, id: int, instance: int, version: Tuple[int, int] = (0x00, 0x00), configuration: dict = {}):
         super().__init__(name, id, instance, version, configuration)
         self.counter = 0
@@ -38,7 +38,7 @@ class SOMEIP_Test(SOMEIP):
 
 
 def setup_client(index: int = 0) -> SOMEIP_Test:
-    configuration = SOMEIP.configuration()
+    configuration = vSOMEIP.configuration()
 
     client_name = "client_example" + f"_{index}"
     service_id = 0x1234 + index
@@ -52,7 +52,7 @@ def setup_client(index: int = 0) -> SOMEIP_Test:
 
 
 def setup_service(index: int = 0) -> SOMEIP_Test:
-    configuration = SOMEIP.configuration()
+    configuration = vSOMEIP.configuration()
 
     service_name = "service_example" + f"_{index}"
     service_id = 0x1234 + index

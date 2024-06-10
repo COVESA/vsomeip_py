@@ -34,7 +34,7 @@ class ClientTestCase(BaseTestCase):
         self.client.request(self.method_id, data=self.data)
 
     def test_response(self):
-        self.assertEqual(self.client.callback(SOMEIP.Message_Type.RESPONSE.value, self.client._id, self.method_id, self.data, 0), None)
+        self.assertEqual(self.client.callback(vSOMEIP.Message_Type.RESPONSE.value, self.client._id, self.method_id, self.data, 0), None)
 
     def test_on_message(self):
         self.client.on_message(self.method_id)

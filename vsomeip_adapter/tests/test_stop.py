@@ -67,7 +67,7 @@ class ClientTestCase(unittest.TestCase):
             print(f"cycle: {index}")
             print()
 
-            SOMEIP.terminate()  # do first for bad restarts
+            vSOMEIP.terminate()  # do first for bad restarts
 
             process = multiprocessing.Process(target=_start_stop_process, args=(index,))
             process.start()
