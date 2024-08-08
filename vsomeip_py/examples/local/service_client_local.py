@@ -31,8 +31,8 @@ SERVICE_PORT_DEFAULT = 30509
 
 
 class service:
-    def test(self, type: int, service: int, id: int, data: bytearray, request_id: int) -> bytearray:
-        print(f"{hex(id)}, {hex(type)}({hex(request_id)}) ({self.service_name}({hex(service)}), {hex(self.service_port)}), data: {data}")
+    def test(self, type: int, service: int, instance: int, id: int, data: bytearray, request_id: int) -> bytearray:
+        print(f"{hex(id)}, {hex(type)}({hex(request_id)}) ({self.service_name}({hex(service)} - {hex(instance)}), {hex(self.service_port)}), data: {data}")
         if id == self.service_method:
             for event in self.service_events:
                 self.someip.notify(event, data=bytearray(data))
@@ -64,8 +64,8 @@ class service:
 
 
 class client:
-    def test(self, type: int, service: int, id: int, data: bytearray, request_id: int) -> bytearray:
-        print(f"{hex(id)}, {hex(type)}({hex(request_id)}) ({self.client_name}({hex(service)}), {hex(self.service_port)}), data: {data}")
+    def test(self, type: int, service: int, instance: int, id: int, data: bytearray, request_id: int) -> bytearray:
+        print(f"{hex(id)}, {hex(type)}({hex(request_id)}) ({self.client_name}({hex(service)} - {hex(instance)}), {hex(self.service_port)}), data: {data}")
         return None  # no response
 
     def __init__(self, index: int = 0, increment: int = 0):

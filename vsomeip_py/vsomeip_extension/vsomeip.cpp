@@ -171,11 +171,14 @@ struct vsomeip_Entity {
     int request_id = message->get_client() + message->get_session();
 
     PyObject *bytes_object = payload_pack(its_payload);
-    PyObject *arguments = Py_BuildValue("iiiOi", type, service_id, message_id, bytes_object, request_id);
+    PyObject *arguments = Py_BuildValue("iiiiOi", type, service_id, instance_id, message_id, bytes_object, request_id);
 
     for (PyObject *callback_object : callback[message_id]) {
       try {
         PyObject *result = PyObject_CallObject(callback_object, arguments); // invoke callback method
+        if (PyErr_Occurred())
+            PyErr_Print(); // or handle the exception as needed
+
         if (result != Py_None) { // respond if have data to send, Todo: actually follow the message types for proper action
         //cout<<"######################### "<<"HERE"<<" #########################"<<std::endl;
           if (PyObject_TypeCheck(result, &PyByteArray_Type)) {

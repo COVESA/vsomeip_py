@@ -205,23 +205,25 @@ class vSOMEIP:
         request_id = vSOMEIP.module.send_service(self._name, self._id, self._instance, id, -1 if is_tcp else 0, data)
         return request_id
 
-    def callback(self, type: int, service: int, id: int, data: bytearray, request_id: int) -> bytearray:
+    def callback(self, type: int, service: int, instance: int, id: int, data: bytearray, request_id: int) -> bytearray:
         """
         :param type: enum Message_Type
         :param service:  service id
+        :param instance: service instance id
         :param id: message id
         :param data: message data
         :param request_id:  client + session
         :return: message data
+        :except: '
         """
-        print(f"{type} -> service/id: {hex(service)}/{hex(id)}, data: {data}")
+        print(f"{type} -> service/id: [{hex(service)} - {hex(instance)}]/{hex(id)}, data: {data}")
 
         # todo:  handle action based on request message type
         if self._is_service:  # only service responds to request if it has data in this case
             return data  # this is the response
         return None
 
-    def on_message(self, id: int, callback: Callable[[int, int, int, bytearray, int], bytearray] = None):
+    def on_message(self, id: int, callback: Callable[[int, int, int, int, bytearray, int], bytearray] = None):
         """
         register for message
         :param id:  id
@@ -231,7 +233,7 @@ class vSOMEIP:
             callback = self.callback
         vSOMEIP.module.register_message(self._name, self._id, self._instance, id, callback)
 
-    def on_event(self, id: int, callback: Callable[[int, int, int, bytearray, int], bytearray] = None, group: int = ANY):
+    def on_event(self, id: int, callback: Callable[[int, int, int, int, bytearray, int], bytearray] = None, group: int = ANY):
         """
         register for event
         :param id: event id (ex: 0x8???)
@@ -241,8 +243,7 @@ class vSOMEIP:
         if callback is None:
             callback = self.callback
 
-        vSOMEIP.module.request_event_service(self._name, self._id, self._instance, id, group, self._version[0],
-                                          self._version[1])
+        vSOMEIP.module.request_event_service(self._name, self._id, self._instance, id, group, self._version[0], self._version[1])
         self.on_message(id, callback)
 
     def remove(self, id, group: int = ANY):
