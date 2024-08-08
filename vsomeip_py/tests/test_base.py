@@ -31,7 +31,7 @@ class SOMEIP_Test(vSOMEIP):
         self.counter = 0
         self.request_ids = []
 
-    def callback(self, type: int, service: int, instance:int, id: int, data: bytearray, request_id: int) -> bytearray:
+    def callback(self, type: int, service: int, instance: int, id: int, data: bytearray, request_id: int) -> bytearray:
         self.request_ids.append(request_id)
         self.counter = self.counter + 1
         return super().callback(type, service, instance, id, data, request_id)
