@@ -395,8 +395,10 @@ static PyObject *vsomeip_register_message(PyObject *self, PyObject *args) {
 
   auto ptr_to_func = std::mem_fn(&vsomeip_Entity::message_handler);
   auto register_message_binder = std::bind(ptr_to_func, instance, std::placeholders::_1);  // MAGIC!!!!!!!!!!!!!!!!!!
-  //app->register_message_handler(vsomeip::ANY_SERVICE, vsomeip::ANY_INSTANCE, vsomeip::ANY_METHOD, register_message_binder);
-  app->register_message_handler(service_id, instance_id, message_id, register_message_binder);
+  if(message_id == 0xFFFF)
+    app->register_message_handler(vsomeip::ANY_SERVICE, vsomeip::ANY_INSTANCE, vsomeip::ANY_METHOD, register_message_binder);
+  else
+    app->register_message_handler(service_id, instance_id, message_id, register_message_binder);
 
   return Py_BuildValue("i", result);
 }
