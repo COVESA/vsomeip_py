@@ -403,6 +403,72 @@ static PyObject *vsomeip_register_message(PyObject *self, PyObject *args) {
   return Py_BuildValue("i", result);
 }
 
+// global map avaiability callback
+std::map<std::string, std::map<int, std::map<int, PyObject *>>> _availability_callbacks;
+
+static PyObject *vsomeip_register_availability(PyObject *self, PyObject *args){
+  std::lock_guard<std::mutex> guard(_mutex);
+  int service_id, instance_id;
+  int result = 0;
+  std::string name;
+  PyObject *callback_object;
+  char *str_pointer;
+
+  // get args
+  if (!PyArg_ParseTuple(args, "siiO", &str_pointer, &service_id, &instance_id, &callback_object)){
+    PyErr_SetString(PyExc_TypeError, PY_INVALID_ARGUMENTS);
+    return Py_BuildValue("i", result);
+  }
+  name = std::string(str_pointer);
+
+  // make sure last argument is a function
+  if (!PyCallable_Check(callback_object)){
+    PyErr_SetString(PyExc_TypeError, "need a callable object!");
+    return Py_BuildValue("i", result);
+  }
+
+  // restore callback map
+  Py_INCREF(callback_object);
+  _availability_callbacks[name][service_id][instance_id] = callback_object;
+
+  auto app = _entity_mapping[name][service_id][instance_id].app;
+  if (app){
+    app->register_availability_handler(
+        service_id,
+        instance_id,
+        [name, service_id, instance_id](vsomeip::service_t _service, vsomeip::instance_t _instance, bool _is_available){
+      // get callback from global map
+      PyObject *callback = _availability_callbacks[name][_service][_instance];
+
+      if (callback && PyCallable_Check(callback)){
+        PyObject *args = Py_BuildValue("(iii)", _service, _instance, _is_available);
+        if (!args){
+          PyErr_Print();
+          return;
+        }
+
+        try{
+          PyGILState_STATE gstate;
+          gstate = PyGILState_Ensure();
+          PyObject_CallObject(callback, args);
+          PyGILState_Release(gstate);
+
+          if (PyErr_Occurred())
+            PyErr_Print(); // or handle the exception as needed
+          return;
+        }
+        catch (...){
+          PyErr_SetString(PyExc_RuntimeError, "Check callback function!!!");
+          return;
+        }
+        Py_DECREF(args);
+        return;
+      }
+    });
+  }
+  return Py_BuildValue("i", result);
+}
+
 static PyObject *vsomeip_offer_service(PyObject *self, PyObject *args) {
   std::lock_guard<std::mutex> guard(_mutex);
 
@@ -588,6 +654,7 @@ static PyMethodDef PyMethodDef_vsomeip[] = {
     {"start", vsomeip_start, METH_VARARGS, "start vsomeip application"},
     {"stop", vsomeip_stop, METH_VARARGS, "stop vsomeip application"},
     {"register_message", vsomeip_register_message, METH_VARARGS, "register message"},
+    {"register_availability", vsomeip_register_availability, METH_VARARGS, "register availability callback"},
     {"offer_service", vsomeip_offer_service, METH_VARARGS, "offer service"},
     {"request_service", vsomeip_request_service, METH_VARARGS, "request service"},
     {"send_service", vsomeip_send_service, METH_VARARGS, "request message to service"},

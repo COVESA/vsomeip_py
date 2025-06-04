@@ -246,6 +246,18 @@ class vSOMEIP:
         vSOMEIP.module.request_event_service(self._name, self._id, self._instance, id, group, self._version[0], self._version[1])
         self.on_message(id, callback)
 
+    def on_availability(self, id: int ,instance: int ,callback: Callable[[int, int, bool], None] = None):
+        """
+        register for availability
+        :param service:  service id
+        :param instance: service instance id
+        :param callback: function for on availability
+        """
+        if callback is None:
+            raise UserWarning("please offer callback function")
+            return None
+        vSOMEIP.module.register_availability(self._name, id, instance, callback)
+
     def remove(self, id, group: int = ANY):
         """
         unregister for event
