@@ -73,7 +73,7 @@ class vSOMEIP:
                         break
         return flag
 
-    def __init__(self, name: str, id: int, instance: int, version: Tuple[int, int] = (0x00, 0x00), configuration: dict = {}, force=False):
+    def __init__(self, name: str, id: int, instance: int, version: Tuple[int, int] = (0x00, 0x00), configuration: dict = None, force=False):
         """
         create instance
         :param name: application name
