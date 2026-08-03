@@ -48,7 +48,7 @@ configuration["service-discovery"]["multicast"] = SERVICE_DISCOVERY_IP
 configuration["service-discovery"]["port"] = SERVICE_DISCOVERY_PORT
 
 
-def callback(type: int, service: int, id: int, data: bytearray, request_id: int) -> bytearray:
+def callback(type: int, service: int, instance: int, id: int, data: bytearray, request_id: int) -> bytearray:
     print(f"{hex(id)} -> {hex(type)}({hex(request_id)}) {hex(service)}, data: {data}")
     return data  # return data if want response to the request, else None
 
