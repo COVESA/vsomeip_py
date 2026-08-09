@@ -29,7 +29,7 @@ APPLICATION_ID: Final = 0x0002
 
 SERVICE_ID: Final = 0x000E
 SERVICE_INSTANCE: Final = 0x0000
-SERVICE_VERSION: Final = (0xFF, 0x00)
+SERVICE_VERSION: Final = (0x01, 0x00)
 SERVICE_PORT: Final = 30509
 CLIENT_IP: Final = "127.0.0.1"
 CLIENT_MASK: Final = "255.255.248.0"
@@ -50,7 +50,7 @@ configuration["service-discovery"]["port"] = SERVICE_DISCOVERY_PORT
 configuration["service-discovery"]["enable"] = SERVICE_DISCOVERY_ENABLE
 
 
-def callback(type: int, service: int, id: int, data: bytearray, request_id: int) -> bytearray:
+def callback(type: int, service: int, instance: int, id: int, data: bytearray, request_id: int) -> bytearray:
     print(f"{hex(id)} -> {hex(type)}({hex(request_id)}) {hex(service)}, data: {data}")
     return data  # return data if want response to the request, else None
 
